@@ -6,7 +6,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 # Uvod
@@ -22,7 +22,7 @@ sa srećom stanovništva koristeći World Happiness Report (2015).
 library(readr)
 library(dplyr)
 
-data_2016 <- read_csv("podaci/2015.csv") %>% mutate(Godina = 2015)
+data_2015 <- read_csv("podaci/2015.csv") %>% mutate(Godina = 2015)
 
 glimpse(data_2015)
 ```
