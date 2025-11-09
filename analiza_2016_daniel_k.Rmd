@@ -1,0 +1,28 @@
+---
+title: "Analiza faktora sreće po državama"
+author: "Daniel Katić, Lana Kohut"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Uvod
+
+Ovaj projekt analizira povezanost ekonomskih i društvenih faktora
+
+sa srećom stanovništva koristeći World Happiness Report (2016).
+
+## Uvoz podataka
+
+```{r}
+
+library(readr)
+library(dplyr)
+
+data_2016 <- read_csv("podaci/2016.csv") %>% mutate(Godina = 2016)
+
+glimpse(data_2016)
+```
