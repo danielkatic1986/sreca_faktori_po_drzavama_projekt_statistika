@@ -23,9 +23,9 @@ library(readr)
 
 library(dplyr)
 
-data_2015 <- read_csv("2015.csv") %>% mutate(Godina = 2015)
+data_2015 <- read_csv("podaci/2015.csv") %>% mutate(Godina = 2015)
 
-data_2016 <- read_csv("2016.csv") %>% mutate(Godina = 2016)
+data_2016 <- read_csv("podaci/2016.csv") %>% mutate(Godina = 2016)
 
 happiness <- bind_rows(data_2015, data_2016)
 
