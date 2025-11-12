@@ -2,27 +2,165 @@
 title: "Analiza faktora sreće po državama"
 author: "Daniel Katić, Lana Kohut"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    df_print: kable
+    extra_dependencies: ["geometry"]
+fontsize: 12pt
+header-includes:
+  - \AtBeginDocument{\everymath{\displaystyle}}
+  - \AtBeginDocument{\renewcommand{\dfrac}[2]{\displaystyle\frac{##1}{##2}}}
+geometry: margin=2.5cm
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 # Uvod
 
-Ovaj projekt analizira povezanost ekonomskih i društvenih faktora
+Ovaj projekt analizira povezanost ekonomskih i društvenih faktora sa srećom stanovništva koristeći podatke iz World Happiness Reporta (2016).
+Izvješće obuhvaća niz pokazatelja koji zajedno tvore tzv. indeks sreće — numerički pokazatelj koji procjenjuje koliko su stanovnici pojedine države zadovoljni svojim životom.
 
-sa srećom stanovništva koristeći World Happiness Report (2016).
+Cilj ove analize je istražiti koliko ekonomski pokazatelji, poput BDP-a po stanovniku, te društveni čimbenici poput obiteljske podrške, slobode izbora i povjerenja u institucije, doprinose ukupnoj percepciji sreće u različitim državama svijeta.
+Korištenjem osnovnih statističkih mjera (aritmetička sredina, medijan, mod, raspon, varijanca, standardna devijacija, percentili i kvartili), te analizom korelacije između ključnih varijabli, moguće je steći bolji uvid u odnose između ekonomskog blagostanja i subjektivnog osjećaja sreće.
 
-## Uvoz podataka
+Osim deskriptivne statistike, projekt vizualno prikazuje distribuciju vrijednosti i međusobne povezanosti podataka radi lakšeg razumijevanja rezultata.
+Dobiveni uvidi mogu poslužiti kao temelj za dublje analize u područjima ekonomske politike, sociologije i psihologije blagostanja.
+
+Projekt je izrađen u okruženju RStudio, koristeći R Markdown i programski jezik R za obradu, analizu i vizualizaciju podataka.
+Autori projekta su Daniel Katić (0303123347) i Lana Kohut.
+\newpage
+
+# Uvoz podataka
 
 ```{r}
 
-library(readr)
-library(dplyr)
+# Uvoz potrebnih biblioteka
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+})
 
-data_2016 <- read_csv("podaci/2016.csv") %>% mutate(Godina = 2016)
+# Podatke učitavamo u varijablu data_2016
+raw_data_2016 <- read_csv("podaci/2016.csv")
+spec(raw_data_2016)
 
-glimpse(data_2016)
+# Dodajemo stupac Godina
+data_2016 <- raw_data_2016 %>% mutate(Godina = 2016)
 ```
+\newpage
+
+# Opis stupaca u datasetu *World Happiness Report 2016*
+
+```{r, echo=FALSE}
+library(knitr)
+
+tablica <- data.frame(
+  "Naziv stupca" = c(
+    "Country", "Region", "Happiness Rank", "Happiness Score",
+    "Lower Confidence Interval", "Upper Confidence Interval",
+    "Economy (GDP per Capita)", "Family", "Health (Life Expectancy)",
+    "Freedom", "Trust (Government Corruption)", "Generosity", "Dystopia Residual"
+  ),
+  "Opis" = c(
+    "Naziv države",
+    "Geografska regija u kojoj se država nalazi",
+    "Rang države prema indeksu sreće (1 = najsretnija država)",
+    "Ukupni indeks sreće za državu (0–10 skala, veća vrijednost = sretnija država)",
+    "Donja granica intervala pouzdanosti za Happiness Score",
+    "Gornja granica intervala pouzdanosti za Happiness Score",
+    "Procjena utjecaja BDP-a po stanovniku na Happiness Score (0–1 skala)",
+    "Procjena utjecaja obiteljske i društvene podrške (0–1 skala)",
+    "Procjena utjecaja očekivanog životnog vijeka na sreću (0–1 skala)",
+    "Procjena koliko su građani slobodni u donošenju životnih odluka (0–1 skala)",
+    "Povjerenje građana u vladu / razina percipirane korupcije (0–1 skala)",
+    "Procjena razine velikodušnosti u društvu (npr. donacije, pomaganje drugima)",
+    "Dodatna komponenta modela koja predstavlja ostatak bodova sreće (referentna vrijednost “najgorih uvjeta”)"
+  ),
+  "Tip podatka" = c(
+    "Karakter (tekst)", "Karakter (tekst)", "Numerički (integer)", "Numerički (decimalni)",
+    "Numerički (decimalni)", "Numerički (decimalni)", "Numerički (decimalni)",
+    "Numerički (decimalni)", "Numerički (decimalni)", "Numerički (decimalni)",
+    "Numerički (decimalni)", "Numerički (decimalni)", "Numerički (decimalni)"
+  ),
+  "Primjer" = c(
+    "Denmark", "Western Europe", "1", "7.526", "7.460", "7.592",
+    "1.44178", "1.16374", "0.79504", "0.57941", "0.44453", "0.36171", "2.73939"
+  )
+)
+
+library(kableExtra)
+
+# Kôd koji lijepo prelama i centrira tablicu
+tablica %>%
+  kable(
+    caption = "Opis stupaca u datasetu",
+    booktabs = TRUE,
+    longtable = TRUE,
+    linesep = ""
+  ) %>%
+  kable_styling(
+    latex_options = c("hold_position", "scale_down"),
+    font_size = 9,
+    position = "center"
+  ) %>%
+  column_spec(2, width = "5cm")  # prelamanje teksta u stupcu “Opis”
+```
+
+
+\newpage
+
+# Opisna statistika
+
+Prikazati ćemo artitmetičku sredinu, medijan, i ostale na "Happiness Score" 
+stupcu.
+
+## Aritmetička sredina
+
+Aritmetička sredina je srednja vrijednost podataka, odnosno zbroj svih elemenata 
+podijelimo sa brojem elemenata.
+
+$\bar{x}_n = \frac{x_1+x_2+...+x_n}{n} = \frac{1}{n} \displaystyle \sum_{i=1}^{n} x_i$
+
+```{r}
+arit_sred <- mean(data_2016$'Happiness Score', na.rm = TRUE)
+```
+
+$\bar{x}$ = `r arit_sred`
+
+## Medijan
+
+Medijan je središnja vrijednost skupa podataka.
+Da bismo ga izračunali, potrebno je najprije sortirati podatke od najmanje do najveće vrijednosti.
+
+Ako skup podataka ima neparan broj elemenata, medijan je jednostavno srednji element.
+
+Ako skup ima paran broj elemenata, medijan se računa kao prosjek dviju srednjih vrijednosti, prema formuli:
+
+$\frac{x_{\frac{n}{2}}+x_{\frac{n}{2}+1}}{2}$
+
+```{r}
+medijan <- median(data_2016$'Happiness Score', na.rm = TRUE)
+```
+
+Medijan = `r medijan`
+
+## Mod
+
+Mod je podatak koji se najčešće pojavljuje u podatkovnom skupu.
+On ne mora nužno postojati, jer možemo imati skup brojeva i svaki broj se pojavljuje 
+samo jednom.
+
+```{r}
+get_mode <- function(v) {
+uniqv <- unique(v)
+uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+mod <- get_mode(data_2016$'Happiness Score')
+```
+
+Mod = `r mod`
+
+## Mjere raspršenja podataka
