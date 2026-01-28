@@ -1,6 +1,6 @@
 ---
-title: "Analiza faktora sreće po državama"
-author: "Daniel Katić, Lana Kohut"
+#title: "Analiza faktora sreće po državama"
+#author: "Daniel Katić, Lana Kohut"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
@@ -9,6 +9,8 @@ output:
     extra_dependencies: ["geometry"]
 fontsize: 12pt
 header-includes:
+  - \usepackage{fontspec}
+  - \setmainfont{Liberation Serif}
   - \AtBeginDocument{\everymath{\displaystyle}}
   - \AtBeginDocument{\renewcommand{\dfrac}[2]{\displaystyle\frac{##1}{##2}}}
 geometry: margin=2.5cm
@@ -17,6 +19,27 @@ geometry: margin=2.5cm
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
+
+\thispagestyle{empty}
+
+\vspace*{3cm}
+
+\begin{center}
+{\Large \textbf{Statistika - Projektni zadatak}} \\[1cm]
+
+{\LARGE \textbf{Analiza faktora sreće po državama}} \\[1.5cm]
+
+\begin{tabular}{cc}
+\textbf{Daniel Katić} & \textbf{Lana Kohut} \\
+0303123347 & 0009069158
+\end{tabular}
+
+\vfill
+
+Rijeka, Siječanj 2026
+\end{center}
+
+\newpage
 
 # Uvod
 
@@ -28,6 +51,10 @@ Korištenjem osnovnih statističkih mjera (aritmetička sredina, medijan, mod, r
 
 Osim deskriptivne statistike, projekt vizualno prikazuje distribuciju vrijednosti i međusobne povezanosti podataka radi lakšeg razumijevanja rezultata.
 Dobiveni uvidi mogu poslužiti kao temelj za dublje analize u područjima ekonomske politike, sociologije i psihologije blagostanja.
+
+Analiza je usmjerena prvenstveno na statističku obradu podataka i primjenu
+pojmova iz vjerojatnosti i statistike, dok se interpretacija rezultata
+razmatra na osnovnoj, ilustrativnoj razini.
 
 Projekt je izrađen u okruženju RStudio, koristeći R Markdown i programski jezik R za obradu, analizu i vizualizaciju podataka.
 Autori projekta su Daniel Katić (0303123347) i Lana Kohut.
@@ -125,7 +152,7 @@ podijelimo sa brojem elemenata.
 $\bar{x}_n = \frac{x_1+x_2+...+x_n}{n} = \frac{1}{n} \displaystyle \sum_{i=1}^{n} x_i$
 
 ```{r}
-arit_sred <- mean(data_2016$'Happiness Score', na.rm = TRUE)
+arit_sred <- mean(data_2016$`Happiness Score`, na.rm = TRUE)
 ```
 
 $\bar{x}$ = `r arit_sred`
@@ -142,7 +169,7 @@ Ako skup ima paran broj elemenata, medijan se računa kao prosjek dviju srednjih
 $\frac{x_{\frac{n}{2}}+x_{\frac{n}{2}+1}}{2}$
 
 ```{r}
-medijan <- median(data_2016$'Happiness Score', na.rm = TRUE)
+medijan <- median(data_2016$`Happiness Score`, na.rm = TRUE)
 ```
 
 Medijan = `r medijan`
@@ -158,9 +185,241 @@ get_mode <- function(v) {
 uniqv <- unique(v)
 uniqv[which.max(tabulate(match(v, uniqv)))]
 }
-mod <- get_mode(data_2016$'Happiness Score')
+mod <- get_mode(data_2016$`Happiness Score`)
 ```
 
 Mod = `r mod`
 
+## Međusobna usporedba rezultata
+
+Usporedbom aritmetičke sredine, medijana i moda može se uočiti da raspodjela
+indeksa sreće nije savršeno simetrična. Razlike između ovih mjera upućuju na
+blagu asimetriju distribucije.
+
 ## Mjere raspršenja podataka
+
+Mjere raspršenja opisuju koliko se vrijednosti slučajne varijable razlikuju
+od svoje središnje vrijednosti. Za razliku od mjera centralne tendencije,
+koje daju informaciju o tipičnoj vrijednosti, mjere raspršenja opisuju
+varijabilnost podataka.
+
+U ovom projektu promatramo mjere raspršenja za neprekidne slučajne varijable,
+posebno za varijablu *Happiness Score*.
+
+### Varijanca i standardna devijacija
+
+Varijanca slučajne varijable mjeri prosječno kvadratno odstupanje vrijednosti
+od očekivanja. Standardna devijacija je korijen varijance i izražena je u
+istim jedinicama kao i promatrana varijabla, zbog čega je često intuitivnija
+za interpretaciju.
+
+```{r}
+varijanca <- var(data_2016$`Happiness Score`, na.rm = TRUE)
+stand_dev <- sd(data_2016$`Happiness Score`, na.rm = TRUE)
+```
+
+Varijanca = `r varijanca`
+
+Standardna devijacija = `r stand_dev`
+
+Dobivena varijanca pokazuje kolika je prosječna raspršenost vrijednosti
+indeksa sreće oko njegove srednje vrijednosti. 
+Veća varijanca i standardna devijacija upućuju na veće razlike u razini sreće među državama, dok manja vrijednost ukazuje na homogeniju raspodjelu.
+
+U kontekstu teorije vjerojatnosti, aritmetička sredina i varijanca u uzorku predstavljaju procjenitelje očekivanja i varijance pripadne slučajne varijable.
+
+Vrijednost standardne devijacije pokazuje da se tipična odstupanja od srednje
+vrijednosti kreću oko jedne jedinice indeksa sreće, što predstavlja umjerenu
+razinu raspršenosti.
+
+\newpage
+## Empirijska vjerojatnost
+
+U praksi se vjerojatnost često procjenjuje na temelju opaženih podataka.
+Takva vjerojatnost naziva se empirijska vjerojatnost i definira se kao
+relativna frekvencija pojavljivanja određenog događaja u uzorku.
+
+U ovom projektu empirijsku vjerojatnost procjenjujemo koristeći podatke
+o indeksu sreće država.
+
+Promatra se događaj da država ima indeks sreće veći od prosječne vrijednosti.
+
+```{r}
+prosjek <- mean(data_2016$`Happiness Score`, na.rm = TRUE)
+emp_vjerojatnost <- mean(data_2016$`Happiness Score` > prosjek, na.rm = TRUE)
+```
+
+Empirijska vjerojatnost = `r emp_vjerojatnost`
+
+Dobivena empirijska vjerojatnost predstavlja udio država u uzorku čiji je indeks sreće veći od prosječne vrijednosti. Ova vrijednost može se interpretirati kao procjena vjerojatnosti da slučajno odabrana država ima iznadprosječan indeks sreće.
+
+Empirijska vjerojatnost dobivena na temelju uzorka predstavlja procjenitelj stvarne, ali nepoznate vjerojatnosti u populaciji.
+
+Vrijednost empirijske vjerojatnosti bliska 0.5 posljedica je činjenice da je
+događaj definiran u odnosu na aritmetičku sredinu, koja približno dijeli
+podatke na dva dijela.
+
+## Nezavisnost i uvjetna vjerojatnost
+
+Dva događaja su nezavisna ako ostvarenje jednog događaja ne utječe na vjerojatnost ostvarenja drugog događaja. U suprotnom, događaji su zavisni.
+
+U kontekstu ovog projekta, promatramo povezanost između geografske regije i razine indeksa sreće.
+
+Definiramo sljedeće događaje:
+
+- A: država ima iznadprosječan indeks sreće  
+- B: država pripada odabranoj geografskoj regiji
+
+```{r}
+regija <- "Western Europe"
+
+ukupno_regija <- sum(data_2016$Region == regija, na.rm = TRUE)
+iznadprosjek_regija <- sum(
+  data_2016$Region == regija & 
+  data_2016$`Happiness Score` > prosjek,
+  na.rm = TRUE
+)
+
+uvjetna_vjerojatnost <- iznadprosjek_regija / ukupno_regija
+```
+
+Uvjetna vjerojatnost = `r uvjetna_vjerojatnost`
+
+Dobivena uvjetna vjerojatnost predstavlja procjenu vjerojatnosti da država ima iznadprosječan indeks sreće uz uvjet da pripada promatranoj regiji.
+
+Ako bi događaji A i B bili nezavisni, tada bi vrijedilo:
+P(A | B) = P(A)
+
+Empirijska vjerojatnost = `r emp_vjerojatnost` 
+
+Uvjetna vjerojatnost = `r uvjetna_vjerojatnost`
+
+Budući da se empirijska vjerojatnost P(A) razlikuje od uvjetne vjerojatnosti
+P(A | B), može se zaključiti da promatrani događaji nisu nezavisni.
+
+Dobiveni zaključak temelji se na empirijskoj procjeni iz uzorka te ne predstavlja strogi dokaz zavisnosti u populaciji.
+
+## Empirijska distribucijska funkcija
+
+Distribucijska funkcija slučajne varijable opisuje vjerojatnost da slučajna
+varijabla poprimi vrijednost manju ili jednaku zadanoj vrijednosti.
+
+Za neprekidne slučajne varijable, distribucijska funkcija definira se kao
+F(x) = P(X ≤ x). U praksi, kada radimo s uzorkom, distribucijska funkcija
+procjenjuje se pomoću empirijske distribucijske funkcije.
+
+U ovom projektu empirijsku distribucijsku funkciju promatramo za varijablu
+*Happiness Score*.
+
+```{r}
+ecdf_happiness <- ecdf(data_2016$`Happiness Score`)
+```
+
+Vrijednost distribucijske funkcije (npr. prag 6) = `r ecdf_happiness(6)`
+
+```{r}
+plot(
+  ecdf_happiness,
+  main = "Empirijska distribucijska funkcija indeksa srece",
+  xlab = "Happiness Score",
+  ylab = "F(x)"
+)
+```
+
+Vrijednost empirijske distribucijske funkcije F(6) predstavlja procjenu
+vjerojatnosti da slučajno odabrana država ima indeks sreće manji ili jednak 6.
+
+Empirijska distribucijska funkcija daje cjelovit uvid u raspodjelu vrijednosti
+slučajne varijable u uzorku.
+
+Oblik empirijske distribucijske funkcije ukazuje na postupno povećanje
+vrijednosti bez naglih skokova, što je u skladu s neprekidnom prirodom
+slučajne varijable.
+
+## Zakon velikih brojeva i centralni granični teorem
+
+U statističkoj analizi važno je razumjeti odnos između uzorka i populacije.
+Zakon velikih brojeva i centralni granični teorem daju teorijsku osnovu za
+pouzdano zaključivanje na temelju uzorka.
+
+Zakon velikih brojeva kaže da se aritmetička sredina uzorka približava
+očekivanju slučajne varijable kako se veličina uzorka povećava.
+
+```{r}
+set.seed(123)
+
+uzorci <- sample(
+  data_2016$`Happiness Score`,
+  size = 50,
+  replace = TRUE
+)
+
+mean(uzorci)
+```
+
+Centralni granični teorem kaže da distribucija aritmetičkih sredina uzoraka
+teži normalnoj distribuciji, neovisno o distribuciji osnovne populacije,
+pod uvjetom da je veličina uzorka dovoljno velika.
+
+Ovi teoremi opravdavaju korištenje aritmetičke sredine i varijance kao
+procjenitelja parametara populacije te omogućuju statističko zaključivanje
+na temelju uzorka.
+
+Primjena ovih teorema opravdava korištenje statističkih procjenitelja u prethodnim dijelovima analize.
+
+## Povezanost indeksa sreće i ekonomskog faktora
+
+U ovom dijelu kratko se razmatra povezanost između indeksa sreće i jednog
+ekonomskog pokazatelja, konkretno BDP-a po stanovniku (*Economy (GDP per Capita)*).
+
+Cilj ove analize nije izgradnja prediktivnog modela, već ilustracija odnosa
+između dviju numeričkih varijabli korištenjem korelacije.
+
+```{r}
+korelacija <- cor(
+  data_2016$`Happiness Score`,
+  data_2016$`Economy (GDP per Capita)`,
+  use = "complete.obs"
+)
+```
+
+Korelacija = `r korelacija`
+
+Dobivena vrijednost korelacijskog koeficijenta ukazuje na pozitivnu povezanost
+između ekonomskog blagostanja i indeksa sreće, što znači da države s višim
+BDP-om po stanovniku u prosjeku imaju viši indeks sreće.
+
+```{r}
+plot(
+  data_2016$`Economy (GDP per Capita)`,
+  data_2016$`Happiness Score`,
+  xlab = "Economy (GDP per Capita)",
+  ylab = "Happiness Score",
+  main = "Povezanost BDP-a po stanovniku i indeksa srece"
+)
+
+```
+
+Na temelju grafičkog prikaza može se uočiti pozitivna povezanost između
+BDP-a po stanovniku i indeksa sreće. Iako odnos nije savršeno linearan,
+vidljivo je da države s višim ekonomskim blagostanjem u prosjeku imaju
+više vrijednosti indeksa sreće.
+
+Važno je naglasiti da korelacija ne implicira uzročnost, već isključivo
+statističku povezanost između promatranih varijabli.
+
+## Zaključak
+
+U ovom projektu provedena je deskriptivna statistička analiza indeksa sreće
+država koristeći podatke iz World Happiness Reporta (2016). Korištenjem mjera
+centralne tendencije, mjera raspršenja te pojmova iz vjerojatnosti i statistike
+prikazano je kako se osnovni statistički koncepti mogu primijeniti na stvarne
+podatke.
+
+Analiza je pokazala umjerenu do visoku varijabilnost indeksa sreće među državama, kao i pozitivnu povezanost između ekonomskog blagostanja i razine sreće.
+Empirijske procjene vjerojatnosti i distribucijske funkcije dodatno su ilustrirale raspodjelu promatrane slučajne varijable.
+
+Dobiveni rezultati temelje se na uzorku podataka te služe kao ilustracija
+statističkih metoda, a ne kao konačni zaključci o populaciji. Projekt potvrđuje
+važnost statističkog pristupa u analizi složenih društvenih pojava.
+
