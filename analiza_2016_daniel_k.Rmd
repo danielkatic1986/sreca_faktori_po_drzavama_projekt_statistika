@@ -407,19 +407,63 @@ više vrijednosti indeksa sreće.
 
 Važno je naglasiti da korelacija ne implicira uzročnost, već isključivo
 statističku povezanost između promatranih varijabli.
+\newpage
+
+## Testiranje statističke hipoteze za sredinu
+
+Uz deskriptivnu analizu, moguće je provesti i statističko zaključivanje o
+populaciji. U ovom dijelu provodi se jednostrani t-test za aritmetičku sredinu indeksa sreće.
+
+Cilj je ispitati je li prosječni indeks sreće država statistički veći od 5.
+
+### T-test za jednu sredinu
+
+T-test je statistički postupak kojim se ispituje razlikuje li se aritmetička
+sredina uzorka statistički značajno od zadane vrijednosti populacijske sredine.
+Koristi se kada populacijska varijanca nije poznata, što je u praksi najčešći
+slučaj.
+
+U ovom radu provodi se jednostrani t-test kojim se ispituje je li prosječni
+indeks sreće država veći od vrijednosti 5.
+
+Postavljamo hipoteze:
+
+H₀: μ = 5  (prosječni indeks sreće jednak je 5)  
+H₁: μ > 5  (prosječni indeks sreće veći je od 5)
+
+```{r}
+t_test_rez <- t.test(
+  data_2016$`Happiness Score`,
+  mu = 5,
+  alternative = "greater"
+)
+
+t_test_rez
+```
+
+Rezultat testa daje p-vrijednost koja predstavlja vjerojatnost dobivanja opaženog uzorka pod pretpostavkom da je nul-hipoteza istinita.
+
+Ako je p-vrijednost manja od 0.05, odbacujemo nul-hipotezu i zaključujemo da je prosječni indeks sreće statistički značajno veći od 5.
+
+Na taj način, osim opisne statistike, koristimo i metode statističkog zaključivanja o populaciji.
+
+Budući da je dobivena p-vrijednost znatno manja od 0.05 (p < 0.001),
+odbacujemo nul-hipotezu te zaključujemo da je prosječni indeks sreće
+statistički značajno veći od 5.
+
+\newpage
 
 ## Zaključak
 
-U ovom projektu provedena je deskriptivna statistička analiza indeksa sreće
-država koristeći podatke iz World Happiness Reporta (2016). Korištenjem mjera
-centralne tendencije, mjera raspršenja te pojmova iz vjerojatnosti i statistike
-prikazano je kako se osnovni statistički koncepti mogu primijeniti na stvarne
-podatke.
+U ovom projektu provedena je deskriptivna i inferencijska statistička analiza indeksa sreće država koristeći podatke iz World Happiness Reporta (2016).
+Korištenjem mjera centralne tendencije, mjera raspršenja te pojmova iz
+vjerojatnosti i statistike prikazano je kako se osnovni statistički koncepti mogu primijeniti na stvarne podatke.
 
 Analiza je pokazala umjerenu do visoku varijabilnost indeksa sreće među državama, kao i pozitivnu povezanost između ekonomskog blagostanja i razine sreće.
-Empirijske procjene vjerojatnosti i distribucijske funkcije dodatno su ilustrirale raspodjelu promatrane slučajne varijable.
+Empirijske procjene vjerojatnosti, distribucijske funkcije te testiranje
+statističkih hipoteza omogućile su i statističko zaključivanje o populaciji.
 
 Dobiveni rezultati temelje se na uzorku podataka te služe kao ilustracija
-statističkih metoda, a ne kao konačni zaključci o populaciji. Projekt potvrđuje
-važnost statističkog pristupa u analizi složenih društvenih pojava.
+statističkih metoda, a ne kao konačni zaključci o populaciji. Projekt potvrđuje važnost statističkog pristupa u analizi složenih društvenih pojava.
+
 
