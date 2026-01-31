@@ -57,7 +57,7 @@ pojmova iz vjerojatnosti i statistike, dok se interpretacija rezultata
 razmatra na osnovnoj, ilustrativnoj razini.
 
 Projekt je izrađen u okruženju RStudio, koristeći R Markdown i programski jezik R za obradu, analizu i vizualizaciju podataka.
-Autori projekta su Daniel Katić (0303123347) i Lana Kohut.
+Autori projekta su Daniel Katić (0303123347) i Lana Kohut (0009069158).
 \newpage
 
 # Uvoz podataka
