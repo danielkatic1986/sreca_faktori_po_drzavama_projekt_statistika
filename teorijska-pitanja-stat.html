@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Statistika – Pitanja i odgovori (usmeni)</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.5; margin: 24px; max-width: 900px; }
+    h1, h2 { line-height: 1.2; }
+    .toc a { text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .q { border: 1px solid #ddd; border-radius: 10px; padding: 16px; margin: 14px 0; }
+    .back { margin-top: 12px; }
+    .back a { font-weight: 600; }
+    code, pre { background: #f6f6f6; padding: 2px 6px; border-radius: 6px; }
+    .small { color: #555; font-size: 0.95em; }
+  </style>
+</head>
+
+<body>
+  <h1>Statistika – pitanja i odgovori za usmeni</h1>
+  <p class="small">
+    Verzija: “jednostavno objašnjeno” + nekoliko korisnih dodataka (Bayes, p-vrijednost, interval pouzdanosti, snaga testa…).
+  </p>
+
+  <h2 id="toc">Table of contents</h2>
+  <ol class="toc">
+    <li><a href="#q1">Što je slučajni eksperiment?</a></li>
+    <li><a href="#q2">Što je prostor elementarnih događaja (Ω)?</a></li>
+    <li><a href="#q3">Što je slučajni događaj?</a></li>
+    <li><a href="#q4">Koje su osnovne operacije s događajima?</a></li>
+    <li><a href="#q5">Što je “naivna” definicija vjerojatnosti?</a></li>
+    <li><a href="#q6">Što je sigma-algebra i zašto nam treba?</a></li>
+    <li><a href="#q7">Što je vjerojatnost (P) – što mora vrijediti?</a></li>
+    <li><a href="#q8">Što je vjerojatnosni prostor (Ω, F, P)?</a></li>
+    <li><a href="#q9">Što je uniformna vjerojatnost?</a></li>
+
+    <li><a href="#q10">Što je uvjetna vjerojatnost?</a></li>
+    <li><a href="#q11">Kada su događaji nezavisni?</a></li>
+    <li><a href="#q12">Što opisuje formula potpune vjerojatnosti?</a></li>
+    <li><a href="#q13">Što je Bayesova formula i čemu služi?</a></li>
+
+    <li><a href="#q14">Što je slučajna varijabla?</a></li>
+    <li><a href="#q15">Razlika diskretna vs. neprekidna slučajna varijabla?</a></li>
+    <li><a href="#q16">Što je funkcija distribucije F(x)?</a></li>
+    <li><a href="#q17">Što je funkcija gustoće f(x)?</a></li>
+    <li><a href="#q18">Poznatije diskretne razdiobe (nabroji i ukratko)?</a></li>
+    <li><a href="#q19">Poznatije neprekidne razdiobe (nabroji i ukratko)?</a></li>
+
+    <li><a href="#q20">Što je matematičko očekivanje E[X] (intuicija)?</a></li>
+    <li><a href="#q21">Kako se računa E[X] i Var(X) za diskretnu varijablu?</a></li>
+    <li><a href="#q22">Kako se računa E[X] i Var(X) za neprekidnu varijablu?</a></li>
+    <li><a href="#q23">Što je kovarijanca?</a></li>
+    <li><a href="#q24">Što je korelacija i kako ju tumačimo?</a></li>
+
+    <li><a href="#q25">Markovljeva nejednakost – ideja?</a></li>
+    <li><a href="#q26">Čebiševljeva nejednakost – ideja?</a></li>
+    <li><a href="#q27">Zakon velikih brojeva – što poručuje?</a></li>
+    <li><a href="#q28">Centralni granični teorem – što poručuje?</a></li>
+
+    <li><a href="#q29">Što je uzorak i što je slučajni uzorak?</a></li>
+    <li><a href="#q30">Što je statistika (kao funkcija uzorka)?</a></li>
+    <li><a href="#q31">Što su momenti?</a></li>
+    <li><a href="#q32">Što je procjenitelj i što je procjena?</a></li>
+    <li><a href="#q33">Koja su dobra svojstva procjenitelja?</a></li>
+
+    <li><a href="#q34">Što je statistička hipoteza?</a></li>
+    <li><a href="#q35">Što je H0 i H1?</a></li>
+    <li><a href="#q36">Što je testna statistika?</a></li>
+    <li><a href="#q37">Što je kritično područje i kritična vrijednost?</a></li>
+    <li><a href="#q38">Pogreška I. i II. vrste (intuicija)?</a></li>
+    <li><a href="#q39">Što je razina značajnosti α?</a></li>
+    <li><a href="#q40">Što je p-vrijednost (p-value) – kako je reći “normalno”?</a></li>
+    <li><a href="#q41">Što je snaga testa (power)?</a></li>
+    <li><a href="#q42">Jednostrani vs. dvostrani test?</a></li>
+    <li><a href="#q43">T-test za jednu sredinu – kada i koje pretpostavke?</a></li>
+    <li><a href="#q44">Što je interval pouzdanosti (ideja, ne formula)?</a></li>
+
+    <li><a href="#q45">Što je regresijski pravac (intuicija)?</a></li>
+  </ol>
+
+  <!-- 1 -->
+  <div class="q" id="q1">
+    <h2>1) Što je slučajni eksperiment?</h2>
+    <p>
+      To je “pokretanje” neke radnje gdje ne možemo unaprijed sa sigurnošću znati ishod,
+      iako znamo koje su opcije moguće. Primjer: bacanje kocke, mjerenje vremena čekanja, anketa…
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 2 -->
+  <div class="q" id="q2">
+    <h2>2) Što je prostor elementarnih događaja (Ω)?</h2>
+    <p>
+      To je skup svih mogućih ishoda eksperimenta. Kod kocke je to {1,2,3,4,5,6}.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 3 -->
+  <div class="q" id="q3">
+    <h2>3) Što je slučajni događaj?</h2>
+    <p>
+      To je bilo koji podskup Ω koji nas zanima. Npr. “pao je paran broj” je {2,4,6}.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 4 -->
+  <div class="q" id="q4">
+    <h2>4) Koje su osnovne operacije s događajima?</h2>
+    <ul>
+      <li><b>Unija</b> (A ∪ B): dogodi se A ili B (ili oba).</li>
+      <li><b>Presjek</b> (A ∩ B): dogode se i A i B.</li>
+      <li><b>Komplement</b> (Aᶜ): ne dogodi se A.</li>
+      <li><b>Disjunktni</b>: A i B se ne mogu dogoditi zajedno → A ∩ B = ∅.</li>
+    </ul>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 5 -->
+  <div class="q" id="q5">
+    <h2>5) Što je “naivna” definicija vjerojatnosti?</h2>
+    <p>
+      Kad su svi ishodi jednako vjerojatni, vjerojatnost događaja je:
+      broj povoljnih ishoda / broj svih ishoda.
+      Primjer: na kocki je P(paran) = 3/6 = 1/2.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 6 -->
+  <div class="q" id="q6">
+    <h2>6) Što je sigma-algebra i zašto nam treba?</h2>
+    <p>
+      To je “kolekcija događaja” nad Ω za koje smijemo pričati o vjerojatnosti.
+      Bitno je da je zatvorena na komplement i na (prebrojive) unije, da matematika bude konzistentna.
+      U praksi: osigurava da se P može smisleno definirati.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 7 -->
+  <div class="q" id="q7">
+    <h2>7) Što je vjerojatnost (P) – što mora vrijediti?</h2>
+    <ul>
+      <li>P(A) je između 0 i 1.</li>
+      <li>P(Ω) = 1.</li>
+      <li>Ako su događaji disjunktni, vjerojatnost unije je zbroj (sigma-aditivnost).</li>
+    </ul>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 8 -->
+  <div class="q" id="q8">
+    <h2>8) Što je vjerojatnosni prostor (Ω, F, P)?</h2>
+    <p>
+      To je kompletan “paket”: Ω je skup ishoda, F je skup dopuštenih događaja,
+      a P je funkcija koja svakom događaju daje vjerojatnost.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 9 -->
+  <div class="q" id="q9">
+    <h2>9) Što je uniformna vjerojatnost?</h2>
+    <p>
+      Kad svaki elementarni ishod ima istu vjerojatnost. Ako Ω ima n ishoda,
+      onda svaki ima vjerojatnost 1/n.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 10 -->
+  <div class="q" id="q10">
+    <h2>10) Što je uvjetna vjerojatnost?</h2>
+    <p>
+      To je vjerojatnost A kad znamo da se dogodilo C. Kao: “koliko je A vjerojatan u toj situaciji”.
+      Formula: P(A|C) = P(A ∩ C) / P(C), ako je P(C) &gt; 0.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 11 -->
+  <div class="q" id="q11">
+    <h2>11) Kada su događaji nezavisni?</h2>
+    <p>
+      Kad znanje da se jedan dogodio ne mijenja vjerojatnost drugog.
+      Matematički: P(A ∩ B) = P(A)·P(B).
+      Isto vrijedi i kao P(A|B)=P(A) (ako je P(B)&gt;0).
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 12 -->
+  <div class="q" id="q12">
+    <h2>12) Što opisuje formula potpune vjerojatnosti?</h2>
+    <p>
+      Ako prostor podijelimo na disjunktne slučajeve H1, H2, … (kao “scenariji”),
+      onda vjerojatnost A dobijemo tako da zbrojimo “A u svakom scenariju”:
+      P(A)=∑ P(Hi)·P(A|Hi).
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 13 -->
+  <div class="q" id="q13">
+    <h2>13) Što je Bayesova formula i čemu služi?</h2>
+    <p>
+      Bayes nam omogućuje da “preokrenemo” uvjetnu vjerojatnost:
+      umjesto P(A|B) dobijemo P(B|A).
+      Koristi se kad imamo test/indikator i želimo procijeniti vjerojatnost uzroka.
+      Formula: P(A|B)= P(B|A)·P(A) / P(B).
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 14 -->
+  <div class="q" id="q14">
+    <h2>14) Što je slučajna varijabla?</h2>
+    <p>
+      To je funkcija koja svakom ishodu iz Ω pridruži broj.
+      U praksi: “pretvorimo” ishod eksperimenta u mjerljivu vrijednost,
+      npr. broj glava u bacanjima, zbroj na kockama, vrijeme čekanja…
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 15 -->
+  <div class="q" id="q15">
+    <h2>15) Razlika diskretna vs. neprekidna slučajna varijabla?</h2>
+    <p>
+      Diskretna uzima prebrojive vrijednosti (0,1,2,…) i za nju govorimo P(X=k).
+      Neprekidna uzima vrijednosti iz intervala (npr. vrijeme, visina) i tada je P(X=x)=0,
+      pa radimo s gustoćom i intervalima, npr. P(a&lt;X&lt;b).
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 16 -->
+  <div class="q" id="q16">
+    <h2>16) Što je funkcija distribucije F(x)?</h2>
+    <p>
+      F(x) nam kaže kolika je vjerojatnost da je X ≤ x.
+      Znači “koliko često upadnemo lijevo od x”.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 17 -->
+  <div class="q" id="q17">
+    <h2>17) Što je funkcija gustoće f(x)?</h2>
+    <p>
+      Gustoća opisuje gdje su vrijednosti “nagruvane” i koliko su česte.
+      Za neprekidnu varijablu vjerojatnost intervala dobije se kao površina ispod grafa:
+      P(a&lt;X&lt;b) = ∫ f(x) dx od a do b.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 18 -->
+  <div class="q" id="q18">
+    <h2>18) Poznatije diskretne razdiobe (nabroji i ukratko)?</h2>
+    <ul>
+      <li><b>Diskretna uniformna</b>: sve vrijednosti jednako vjerojatne.</li>
+      <li><b>Bernoulli</b>: samo 0/1 (neuspjeh/uspjeh) s vjerojatnošću p.</li>
+      <li><b>Binomna</b>: broj uspjeha u n nezavisnih Bernoullijevih pokusa.</li>
+      <li><b>Geometrijska</b>: koliko pokušaja treba do prvog uspjeha.</li>
+    </ul>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 19 -->
+  <div class="q" id="q19">
+    <h2>19) Poznatije neprekidne razdiobe (nabroji i ukratko)?</h2>
+    <ul>
+      <li><b>Normalna</b>: “zvonasta”, određena sredinom μ i varijancom σ².</li>
+      <li><b>Eksponencijalna</b>: često modelira vrijeme čekanja do događaja.</li>
+      <li><b>Uniformna (neprekidna)</b>: sve vrijednosti na (a,b) jednako česte.</li>
+    </ul>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 20 -->
+  <div class="q" id="q20">
+    <h2>20) Što je matematičko očekivanje E[X] (intuicija)?</h2>
+    <p>
+      To je “dugoročni prosjek” koji bismo dobili kad bismo eksperiment ponavljali jako puno puta.
+      Ne mora biti jedna od mogućih vrijednosti, ali predstavlja tipičnu sredinu.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 21 -->
+  <div class="q" id="q21">
+    <h2>21) Kako se računa E[X] i Var(X) za diskretnu varijablu?</h2>
+    <p>
+      Za očekivanje množimo svaku vrijednost s njenom vjerojatnošću i zbrojimo:
+      E[X]=∑ aᵢ·P(X=aᵢ).
+    </p>
+    <p>
+      Varijanca mjeri raspršenost oko očekivanja. Može se računati kao:
+      Var(X)=E[X²] − (E[X])².
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 22 -->
+  <div class="q" id="q22">
+    <h2>22) Kako se računa E[X] i Var(X) za neprekidnu varijablu?</h2>
+    <p>
+      Umjesto zbrajanja radimo integrale:
+      E[X]=∫ x·f(x) dx, a Var(X)=∫ (x−E[X])²·f(x) dx.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 23 -->
+  <div class="q" id="q23">
+    <h2>23) Što je kovarijanca?</h2>
+    <p>
+      To je mjera kako se dvije varijable kreću zajedno.
+      Ako su često “u istom smjeru” → kovarijanca pozitivna, ako su suprotno → negativna.
+      Definicija: Cov(X,Y)=E[XY] − E[X]E[Y].
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 24 -->
+  <div class="q" id="q24">
+    <h2>24) Što je korelacija i kako ju tumačimo?</h2>
+    <p>
+      Korelacija je standardizirana kovarijanca, pa je uvijek između -1 i 1.
+      Znak govori smjer, a apsolutna vrijednost jačinu linearne povezanosti.
+      Corr(X,Y)=Cov(X,Y)/(σX·σY).
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 25 -->
+  <div class="q" id="q25">
+    <h2>25) Markovljeva nejednakost – ideja?</h2>
+    <p>
+      Za nenegativnu varijablu kaže da je vjerojatnost “da ode jako visoko” ograničena
+      njenim očekivanjem. Koristi se kad znamo malo informacija, ali želimo grubu gornju granicu.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 26 -->
+  <div class="q" id="q26">
+    <h2>26) Čebiševljeva nejednakost – ideja?</h2>
+    <p>
+      Kaže da je vjerojatnost da X odstupa od svog očekivanja za “više od k standardnih devijacija”
+      relativno mala. Daje gornju granicu koristeći samo varijancu.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 27 -->
+  <div class="q" id="q27">
+    <h2>27) Zakon velikih brojeva – što poručuje?</h2>
+    <p>
+      Što više puta ponavljamo pokus, prosjek rezultata sve više ide prema očekivanju.
+      Znači: prosjek uzorka “stabilizira se” oko prave sredine.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 28 -->
+  <div class="q" id="q28">
+    <h2>28) Centralni granični teorem – što poručuje?</h2>
+    <p>
+      Kaže da se prosjek velikog broja nezavisnih, jednako distribuiranih varijabli
+      ponaša približno normalno (nakon standardizacije), čak i ako originalna distribucija nije normalna.
+      To objašnjava zašto je normalna razdioba stalno prisutna u statistici.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 29 -->
+  <div class="q" id="q29">
+    <h2>29) Što je uzorak i što je slučajni uzorak?</h2>
+    <p>
+      Uzorak je skup opažanja/podataka koje smo uzeli iz populacije.
+      Slučajni uzorak znači da svatko (ili svaka jedinica) ima jednaku šansu biti odabran.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 30 -->
+  <div class="q" id="q30">
+    <h2>30) Što je statistika (kao funkcija uzorka)?</h2>
+    <p>
+      Statistika je bilo koji broj koji izračunamo iz uzorka, npr. uzoračka sredina, varijanca,
+      minimum, maksimum… Dakle “sažetak” uzorka.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 31 -->
+  <div class="q" id="q31">
+    <h2>31) Što su momenti?</h2>
+    <p>
+      To su očekivanja potencija varijable. Prvi moment je E[X] (sredina),
+      drugi moment uključuje E[X²], a koriste se za opis oblika distribucije.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 32 -->
+  <div class="q" id="q32">
+    <h2>32) Što je procjenitelj i što je procjena?</h2>
+    <p>
+      Procjenitelj je “pravilo” (statistika) kojim iz uzorka procjenjujemo nepoznati parametar populacije.
+      Procjena je konkretan broj koji dobijemo kad to pravilo primijenimo na svoje podatke.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 33 -->
+  <div class="q" id="q33">
+    <h2>33) Koja su dobra svojstva procjenitelja?</h2>
+    <ul>
+      <li><b>Nepristran</b>: u prosjeku pogađa pravi parametar (E[procjenitelj] = parametar).</li>
+      <li><b>Konzistentan</b>: kako uzorak raste, procjena ide prema pravoj vrijednosti.</li>
+      <li><b>Efikasan</b>: ima što manju varijancu među dobrim procjeniteljima.</li>
+    </ul>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 34 -->
+  <div class="q" id="q34">
+    <h2>34) Što je statistička hipoteza?</h2>
+    <p>
+      To je tvrdnja o populaciji (najčešće o parametru poput sredine, udjela ili varijance),
+      koju provjeravamo pomoću uzorka.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 35 -->
+  <div class="q" id="q35">
+    <h2>35) Što je H0 i H1?</h2>
+    <p>
+      H0 je nul-hipoteza: “default” tvrdnja koju držimo dok nemamo dovoljno dokaza protiv nje.
+      H1 je alternativna: ono što želimo pokazati ili sumnjamo da vrijedi.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 36 -->
+  <div class="q" id="q36">
+    <h2>36) Što je testna statistika?</h2>
+    <p>
+      To je broj izračunat iz uzorka na temelju kojeg donosimo odluku.
+      Npr. kod t-testa to je t-vrijednost.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 37 -->
+  <div class="q" id="q37">
+    <h2>37) Što je kritično područje i kritična vrijednost?</h2>
+    <p>
+      Kritično područje su “ekstremne” vrijednosti testne statistike koje su rijetke ako je H0 istinita.
+      Kritična vrijednost je granica: ako prijeđemo tu granicu, odbacujemo H0.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 38 -->
+  <div class="q" id="q38">
+    <h2>38) Pogreška I. i II. vrste (intuicija)?</h2>
+    <ul>
+      <li><b>I. vrsta</b>: odbacili smo H0, a ona je zapravo istinita (lažna uzbuna).</li>
+      <li><b>II. vrsta</b>: nismo odbacili H0, a H1 je zapravo istinita (propustili smo efekt).</li>
+    </ul>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 39 -->
+  <div class="q" id="q39">
+    <h2>39) Što je razina značajnosti α?</h2>
+    <p>
+      To je prag koji unaprijed odaberemo (npr. 0.05) i predstavlja koliko smo spremni riskirati
+      pogrešku I. vrste. Manji α znači stroži kriterij za odbacivanje H0.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 40 -->
+  <div class="q" id="q40">
+    <h2>40) Što je p-vrijednost (p-value) – kako je reći “normalno”?</h2>
+    <p>
+      p-vrijednost je vjerojatnost da, <b>ako je H0 istinita</b>, dobijemo rezultat barem ovako ekstreman kao naš.
+      Što je p manji, to su podaci “neobičniji” pod H0 i imamo jači razlog odbaciti H0.
+      Ako je p &lt; α → odbacujemo H0.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 41 -->
+  <div class="q" id="q41">
+    <h2>41) Što je snaga testa (power)?</h2>
+    <p>
+      Snaga testa je vjerojatnost da ćemo <b>ispravno</b> odbaciti H0 kad je H1 istinita.
+      Drugim riječima: koliko dobro test “hvata” stvarni efekt.
+      Snaga je 1 − (pogreška II. vrste).
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 42 -->
+  <div class="q" id="q42">
+    <h2>42) Jednostrani vs. dvostrani test?</h2>
+    <p>
+      Jednostrani test pita “je li veće” ili “je li manje”.
+      Dvostrani pita “je li različito” (u bilo kojem smjeru).
+      Dvostrani je konzervativniji jer gleda ekstremnost na obje strane.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 43 -->
+  <div class="q" id="q43">
+    <h2>43) T-test za jednu sredinu – kada i koje pretpostavke?</h2>
+    <p>
+      Koristimo ga kad želimo provjeriti je li sredina populacije jednaka nekoj vrijednosti,
+      a ne znamo populacijsku varijancu.
+    </p>
+    <ul>
+      <li>Uzorak je (otprilike) slučajan i opažanja su nezavisna.</li>
+      <li>Podaci su približno normalni ili je uzorak dovoljno velik (CLT pomaže).</li>
+    </ul>
+    <p>
+      Rezultat je t-vrijednost i p-vrijednost, pa uspoređujemo p s α.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 44 -->
+  <div class="q" id="q44">
+    <h2>44) Što je interval pouzdanosti (ideja, ne formula)?</h2>
+    <p>
+      To je raspon vrijednosti za koji očekujemo da sadrži pravi parametar populacije (npr. sredinu).
+      “95% interval pouzdanosti” znači: kad bismo ponavljali uzorkovanje puno puta,
+      oko 95% takvih intervala bi sadržavalo pravu vrijednost.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+  <!-- 45 -->
+  <div class="q" id="q45">
+    <h2>45) Što je regresijski pravac (intuicija)?</h2>
+    <p>
+      To je linija koja najbolje opisuje linearni odnos između X i Y,
+      tako da minimizira zbroj kvadrata vertikalnih odstupanja (grešaka) od pravca.
+      Koristi se za opis veze i (oprezno) predikciju.
+    </p>
+    <div class="back"><a href="#toc">Povratak</a></div>
+  </div>
+
+</body>
+</html>
